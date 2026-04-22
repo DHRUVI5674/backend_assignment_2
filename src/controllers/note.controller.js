@@ -34,8 +34,25 @@ const createNote = async (req, res) => {
   }
 };
 
-
+//create multiple notes
+const createMultiple = async (req,res) =>{
+  const notes = req.body.notes;
+  try{
+    const notesData = await Note.insertMany(notes);
+    res.status(200).json({success: true,
+      message: "Notes created successfully",
+      data: notesData})
+  }
+  catch(err){
+    res.status(404).json({
+  "success": false,
+  "message": "Notes not crreated",
+  "data": null
+})
+  }
+}
 
 module.exports = {
-    createNote
+    createNote,
+    createMultiple
 };
