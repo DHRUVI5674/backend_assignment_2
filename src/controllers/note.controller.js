@@ -269,20 +269,16 @@ const getFilter = async (req, res) => {
     if (req.query.category) {
       filter.category = req.query.category;
     }
-
     if (req.query.isPinned !== undefined) {
       filter.isPinned = req.query.isPinned === "true";
     }
-
     const notes = await Note.find(filter);
-
     res.status(200).json({
       success: true,
       message: "Notes fetched successfully",
       count: notes.length,
       data: notes
     });
-
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -291,6 +287,32 @@ const getFilter = async (req, res) => {
     });
   }
 };
+
+
+//Get pinned notes
+const getPin = async (req,res) =>{
+  try{
+     const filter = { isPinned:true };
+     if(req.query.category){
+      filter.category = req.query.category;
+     }
+     const notePinned = await Note.find(filter);
+     res.status(200).json({
+  "success": true,
+  "message": "Pinned notes fetched successfully",
+  "count": notePinned.length,
+  "data": notePinned
+})
+  }
+  catch(err){
+    res.status(400).json({
+  "success": false,
+  "message": "Pinned notes not fetched successfully",
+  "data": null
+  })
+}
+}
+
 
 
 module.exports = {
@@ -305,5 +327,6 @@ module.exports = {
     getByCategory,
     getPinned,
     noteSummary,
-    getFilter
+    getFilter,
+    getPin
 };
