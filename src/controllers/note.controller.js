@@ -259,6 +259,38 @@ const noteSummary = async (req,res) =>{
   }
 }
 
+////Query Parameters////
+
+//General filter
+const getFilter = async (req, res) => {
+  try {
+    const filter = {};
+
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+
+    if (req.query.isPinned !== undefined) {
+      filter.isPinned = req.query.isPinned === "true";
+    }
+
+    const notes = await Note.find(filter);
+
+    res.status(200).json({
+      success: true,
+      message: "Notes fetched successfully",
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "Notes not fetched successfully",
+      data: null
+    });
+  }
+};
 
 
 module.exports = {
@@ -272,5 +304,6 @@ module.exports = {
     deleteInBulk,
     getByCategory,
     getPinned,
-    noteSummary
+    noteSummary,
+    getFilter
 };
