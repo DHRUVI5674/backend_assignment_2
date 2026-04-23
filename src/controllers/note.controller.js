@@ -141,6 +141,26 @@ const patchNote = async (req,res) =>{
   }
 }
 
+//delete the note by id
+const deleteNote = async (req,res) =>{
+  const noteId = req.params.id;
+  try{
+    const deletedNote = await Note.findByIdAndDelete(noteId);
+    res.status(200).json({
+  "success": true,
+  "message": "Note deleted successfully",
+  "data": null
+})
+  }
+  catch(err){
+    res.status(500).json({
+      success: false,
+      message: "Error deleting note",
+      data: null
+    });
+  }
+}
+
 
 module.exports = {
     createNote,
@@ -148,5 +168,6 @@ module.exports = {
     getAllNote,
     getNoteById,
     putNote,
-    patchNote
+    patchNote,
+    deleteNote
 };
