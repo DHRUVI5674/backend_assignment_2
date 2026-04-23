@@ -186,6 +186,32 @@ const deleteInBulk = async (req, res) => {
   }
 };
 
+///////ROUTE PARAMETERS/////
+
+//Get by category
+const getByCategory = async (req, res) => {
+  const Category = req.params.category.trim();
+
+  try {
+    const notes = await Note.find({
+      category: { $regex: `^${Category}$`, $options: "i" }
+    });
+
+    console.log(notes);
+    res.status(200).json({
+      success: true,
+      message: `Notes fetched successfully for category ${Category}`,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching notes",
+      data: null
+    });
+  }
+};
 
 module.exports = {
     createNote,
@@ -195,5 +221,6 @@ module.exports = {
     putNote,
     patchNote,
     deleteNote,
-    deleteInBulk
+    deleteInBulk,
+    getByCategory
 };
