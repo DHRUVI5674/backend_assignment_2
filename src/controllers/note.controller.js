@@ -380,6 +380,35 @@ const findByDate = async (req, res) => {
   }
 };
 
+//// PAGINATION ////
+
+//Paginate all notes
+const paginateAll = async (req,res) =>{
+  try{
+     const page = req.query.page || 1;
+     const limit = req.query.limit || 10;
+     const skip = (page-1)*limit;
+     const total = await Note.countDocuments();
+    const totalPages = Math.ceil(total / limit);
+    const notes = await Note.find().skip(skip).limit(limit);
+     res.status(200).json({
+  "success": true,
+  "message": "Notes fetched successfully",
+  "data": notes,
+  "pagination": {
+    "total": total,
+    "page": page,
+    "limit": limit,
+    "totalPages": totalPages,
+    "hasNextPage": true,
+    "hasPrevPage": true
+  }
+})
+  }
+  catch(err){
+     res.status(400).json()
+  }
+}
 
 
 module.exports = {
@@ -397,5 +426,6 @@ module.exports = {
     getFilter,
     getPin,
     findByCategory,
-    findByDate
+    findByDate,
+    paginateAll
 };
