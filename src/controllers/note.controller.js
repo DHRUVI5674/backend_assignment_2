@@ -452,6 +452,45 @@ const paginateByCategory = async (req, res) => {
 };
 
 
+//Sort all notes
+const sortNotes = async (req, res) => {
+  try {
+    const allowedFields = ["title", "createdAt", "updatedAt", "category"];
+    const sortBy = req.query.sortBy || "createdAt";
+    const order = req.query.order || "desc";
+
+    if (!allowedFields.includes(sortBy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sort field",
+        data: null
+      });
+    }
+
+    let sortOrder = -1; 
+    if (order === "asc") {
+      sortOrder = 1;
+    }
+
+    const notes = await Note.find().sort({ [sortBy]: sortOrder });
+
+    res.status(200).json({
+      success: true,
+      message: "Notes sorted successfully",
+      count: notes.length,
+      data: notes
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error sorting notes",
+      data: null
+    });
+  }
+};
+
+
+
 module.exports = {
     createNote,
     createMultiple,
@@ -469,5 +508,6 @@ module.exports = {
     findByCategory,
     findByDate,
     paginateAll,
-    paginateByCategory
+    paginateByCategory,
+    sortNotes
 };
