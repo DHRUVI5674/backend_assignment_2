@@ -237,6 +237,29 @@ const getPinned = async (req, res) => {
 };
 
 
+//Get note summary
+const noteSummary = async (req,res) =>{
+  const noteId = req.params.id;
+  try{
+   const note = await Note.findById(noteId, {
+  title: 1,category: 1,isPinned: 1,createdAt: 1,
+});
+   res.status(200).json({
+  "success": true,
+  "message": "Note summary fetched successfully",
+  "data": note
+   })
+  }
+  catch(err){
+    res.status(400).json({
+  "success": false,
+  "message": "Error fetching note summary",
+  "data": null
+})
+  }
+}
+
+
 
 module.exports = {
     createNote,
@@ -248,5 +271,6 @@ module.exports = {
     deleteNote,
     deleteInBulk,
     getByCategory,
-    getPinned
+    getPinned,
+    noteSummary
 };
