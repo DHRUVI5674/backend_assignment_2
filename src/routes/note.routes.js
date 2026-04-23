@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { createNote,createMultiple, getAllNote,getNoteById, putNote ,patchNote,deleteNote,deleteInBulk,getByCategory,getPinned,noteSummary,getFilter,getPin,findByCategory,findByDate,paginateAll} = require('../controllers/note.controller.js');
+const { createNote,createMultiple, getAllNote,getNoteById, putNote ,patchNote,deleteNote,deleteInBulk,getByCategory,getPinned,noteSummary,getFilter,getPin,findByCategory,findByDate,paginateAll,paginateByCategory} = require('../controllers/note.controller.js');
 
 router.post('/', createNote);
 router.post('/bulk', createMultiple);
 
 router.get('/', getAllNote);
 router.get('/paginate',paginateAll);
+router.get('/paginate/category/:category',paginateByCategory);
 router.get('/filter',getFilter);
 router.get('/filter/pinned',getPin);
 router.get('/filter/category',findByCategory);
