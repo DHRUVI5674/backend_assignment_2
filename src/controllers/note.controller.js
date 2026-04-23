@@ -313,6 +313,35 @@ const getPin = async (req,res) =>{
 }
 }
 
+//Filter by category (query param)
+const findByCategory = async (req,res) =>{
+  try{
+       const {name} = req.query;
+       if(!name){
+        return res.status(400).json({
+        success: false,
+        message: "Query param 'name' is required",
+        data: null
+      });
+       }
+
+       const notes = await Note.find({category:name});
+       res.status(200).json({
+  "success": true,
+  "message": "Notes filtered by category: work",
+  "count": notes.length,
+  "data": notes
+})
+  }
+  catch(err){
+      res.status(400).json({
+  "success": false,
+  "message": "Query param 'name' is required",
+  "data": null
+})
+  }
+}
+
 
 
 module.exports = {
@@ -328,5 +357,6 @@ module.exports = {
     getPinned,
     noteSummary,
     getFilter,
-    getPin
+    getPin,
+    findByCategory
 };
