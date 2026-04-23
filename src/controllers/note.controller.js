@@ -489,6 +489,40 @@ const sortNotes = async (req, res) => {
   }
 };
 
+//Sort pinned notes only
+const sortPinned = async (req, res) => {
+  try {
+    const allowedFields = ["title", "createdAt", "updatedAt", "category"];
+    const sortBy = req.query.sortBy || "createdAt";
+    const order = req.query.order || "desc";
+
+    if (!allowedFields.includes(sortBy)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sort field",
+        data: null
+      });
+    }
+
+    let sortOrder = order === "asc" ? 1 : -1;
+    const filter = { isPinned: true };
+
+    const notes = await Note.find(filter).sort({ [sortBy]: sortOrder });
+    res.status(200).json({
+      success: true,
+      message: `Pinned notes sorted by ${sortBy} in ${order} order`,
+      count: notes.length,
+      data: notes
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error sorting pinned notes",
+      data: null
+    });
+  }
+};
+
 
 
 module.exports = {
@@ -509,5 +543,6 @@ module.exports = {
     findByDate,
     paginateAll,
     paginateByCategory,
-    sortNotes
+    sortNotes,
+    sortPinned
 };
