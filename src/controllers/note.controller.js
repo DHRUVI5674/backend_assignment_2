@@ -342,6 +342,44 @@ const findByCategory = async (req,res) =>{
   }
 }
 
+//Filter by date range
+const findByDate = async (req, res) => {
+  try {
+    const { from, to } = req.query;
+
+    if (!from || !to) {
+      return res.status(400).json({
+        success: false,
+        message: "Both from and to are required",
+        data: null
+      });
+    }
+
+    const filter = {
+      createdAt: {
+        $gte: new Date(from),
+        $lte: new Date(to)
+      }
+    };
+
+    const notes = await Note.find(filter);
+
+    res.status(200).json({
+      success: true,
+      message: `Notes fetched between ${from} and ${to}`,
+      count: notes.length,
+      data: notes
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching notes by date range",
+      data: null
+    });
+  }
+};
+
 
 
 module.exports = {
@@ -358,5 +396,6 @@ module.exports = {
     noteSummary,
     getFilter,
     getPin,
-    findByCategory
+    findByCategory,
+    findByDate
 };
